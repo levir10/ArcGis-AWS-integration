@@ -51,19 +51,21 @@ class Tool:
         threading.Thread(target=self.launch_gui, daemon=True).start()
 
     def launch_gui(self):
+        # Create a simple GUI using Tkinter
         root = tk.Tk()
-        root.title("Testing Exodigo ArcGIS GUI")
-        root.geometry("300x180")
-        root.resizable(True, True)
+        root.title("Testing Exodigo ArcGIS GUI")  # Add a title to the window
+        root.geometry("400x300")  # Set the window size
+        root.resizable(True, True)  # Make the window resizable
 
-        tk.Label(root, text="Click the button below:").pack(pady=10)
+        # Add a label to the window
+        tk.Label(root, text="Select an option:").pack(pady=10)
 
-        entry = tk.Entry(root)
-        entry.pack(pady=5)
-
-        def on_submit():
-            val = entry.get()
-            messagebox.showinfo("Input Value", f"You entered: {val}")
+        # Create a dropdown menu but disable it initially
+        dropdown_var = tk.StringVar(root)
+        dropdown_var.set("Please log in first")  # Default value
+        dropdown = tk.OptionMenu(root, dropdown_var, "Please log in first")
+        dropdown.config(state="disabled")  # Disable the dropdown initially
+        dropdown.pack(pady=5)
 
         def run_aws_login():
             try:
@@ -71,14 +73,30 @@ class Tool:
                 sts = session.client("sts")
                 identity = sts.get_caller_identity()
                 messagebox.showinfo("AWS Login", f"Logged in as:\n{identity['Arn']}")
+
+                # Fetch S3 bucket contents after successful login
+                bucket_name = "cdks3lambdasqsec2stack-playgroundorleviuploadbucke-at4u9pqvxnsr"
+                s3 = session.client("s3")
+                response = s3.list_objects_v2(Bucket=bucket_name)
+                file_names = [obj["Key"] for obj in response.get("Contents", [])]
+
+                # Update the dropdown menu with fetched file names
+                dropdown_var.set(file_names[0] if file_names else "No files found")
+                menu = dropdown["menu"]
+                menu.delete(0, "end")
+                for file_name in file_names:
+                    menu.add_command(label=file_name, command=lambda value=file_name: dropdown_var.set(value))
+
+                # Enable the dropdown
+                dropdown.config(state="normal")
+
             except (NoCredentialsError, BotoCoreError) as e:
                 messagebox.showerror("AWS Login Failed", f"Error: {str(e)}")
 
         def on_login():
             threading.Thread(target=run_aws_login, daemon=True).start()
 
-        tk.Button(root, text="Submit", command=on_submit).pack(pady=5)
-        tk.Button(root, text="Exodigo Login", command=on_login).pack(pady=5)
+        tk.Button(root, text="Exodigo Login", command=on_login).pack(side=tk.BOTTOM, pady=10)
 
         root.mainloop()
 
