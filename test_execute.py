@@ -1,0 +1,120 @@
+# test_execute.py using customtkinter
+import tkinter as tk
+import customtkinter as ctk
+from tkinter import messagebox
+import os
+import threading
+import boto3
+from botocore.exceptions import BotoCoreError, NoCredentialsError
+import subprocess
+import logging
+
+# Configure logging to log messages to a file
+logging.basicConfig(
+    filename="log.txt",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
+def launch_gui():
+    """Launch the main GUI application."""
+    logging.info("Launching GUI.")
+    # Set the appearance and theme for the customtkinter GUI
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("dark-blue")#set the color theme to dark-blue
+
+    # Create the main application window
+    root = ctk.CTk()
+    root.title("Exodigo ArcGis Integrator")
+    root.geometry("400x300")
+    root.resizable(True, True)
+    # Set custom window icon
+    root.wm_iconbitmap("exodigo-logo-32x32.ico") 
+    # Add a label to the GUI
+    label = ctk.CTkLabel(root, text="Select an option:", font=ctk.CTkFont(size=16, weight="bold"))
+    label.pack(pady=15)
+    
+    # Create a dropdown menu with a default "Loading..." value
+    dropdown_var = ctk.StringVar(value="Loading...")# Set default value
+    dropdown = ctk.CTkOptionMenu(root, variable=dropdown_var, values=["Loading..."])#the dropdown object
+    dropdown.pack(pady=10)
+
+    # Add a login button to the GUI
+    login_button = ctk.CTkButton(root, text="Exodigo Login", corner_radius=20, fg_color="#1f6aa5", hover_color="#144870")
+    login_button.pack(side="bottom", pady=20)
+
+    def populate_dropdown():
+        """Populate the dropdown menu with file names from an S3 bucket."""
+        logging.info("Populating dropdown.")
+        try:
+            # Create a boto3 session using the "prod" profile
+            try:
+                session = boto3.Session(profile_name="prod")
+                s3 = session.client("s3")
+            except BotoCoreError as e:
+                logging.error(f"BotoCoreError: {e}")
+                # Handle missing SSO token error
+                if "SSO token" in str(e):
+                    messagebox.showerror("AWS SSO Token Missing", "SSO token is missing. Please log in using Exodigo Login.")
+                    dropdown_var.set("Please log in first")
+                    dropdown.configure(values=["Please log in first"])
+                    return
+                raise
+            
+            # Specify the S3 bucket name and list its contents
+            bucket_name = "cdks3lambdasqsec2stack-playgroundorleviuploadbucke-at4u9pqvxnsr"
+            response = s3.list_objects_v2(Bucket=bucket_name)
+            file_names = [obj["Key"] for obj in response.get("Contents", [])]
+
+            # Update the dropdown menu with the file names
+            if file_names:
+                logging.info(f"Files found: {file_names}")
+                dropdown_var.set(file_names[0])
+                dropdown.configure(values=file_names)
+                login_button.pack_forget()  # Hide the login button if files are found
+            else:
+                logging.warning("No files found in the bucket.")
+                dropdown_var.set("No files found")
+                dropdown.configure(values=["No files found"])
+        except (NoCredentialsError, BotoCoreError) as e:
+            logging.error(f"Error while populating dropdown: {e}")
+            dropdown_var.set("Please log in first")
+            dropdown.configure(values=["Please log in first"])
+            # Show an error message if login fails
+            if "SSO session" in str(e):
+                messagebox.showerror("AWS Login Failed", "SSO session expired. Please confirm your identity in the opened browser window.")
+            else:
+                messagebox.showerror("AWS Login Failed", f"Error: {str(e)}")
+
+    def run_sso_login():
+        """Run the AWS SSO login process."""
+        logging.info("Running SSO login.")
+        try:
+            # Execute the AWS SSO login command
+            subprocess.run(["aws", "sso", "login", "--profile", "prod"], check=True)
+            logging.info("SSO login successful.")
+            messagebox.showinfo("SSO Login", "SSO login successful. Please try logging in again.")
+            populate_dropdown()  # Re-populate the dropdown after successful login
+        except subprocess.CalledProcessError as e:
+            logging.error(f"SSO login failed: {e}")
+            messagebox.showerror("SSO Login Failed", f"Error: {str(e)}")
+
+    def on_login():
+        """Handle the login button click event."""
+        logging.info("Login button clicked.")
+        # Run the SSO login process in a separate thread
+        threading.Thread(target=run_sso_login, daemon=True).start()
+
+    # Configure the login button to call the on_login function
+    login_button.configure(command=on_login)
+    
+    # Populate the dropdown menu in a separate thread
+    threading.Thread(target=populate_dropdown, daemon=True).start()
+    
+    # Start the main event loop for the GUI
+    root.mainloop()
+
+if __name__ == "__main__":
+    # Entry point of the script
+    launch_gui()

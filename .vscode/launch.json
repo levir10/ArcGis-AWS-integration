@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Tkinter Test Script",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/test_execute.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}
