@@ -1,5 +1,6 @@
 import arcpy
 import tkinter as tk
+from PIL import Image
 import customtkinter as ctk
 from tkinter import messagebox
 import os
@@ -10,8 +11,9 @@ import subprocess
 import logging
 
 # Configure logging to log messages to a file
+log_path = os.path.join(os.path.dirname(__file__), "log.txt")
 logging.basicConfig(
-    filename="log.txt",
+    filename=log_path,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -94,7 +96,19 @@ class Tool:
         dropdown.pack(pady=10)
 
         # Add a login button to the GUI
-        login_button = ctk.CTkButton(root, text="Exodigo Login", corner_radius=20, fg_color="#1f6aa5", hover_color="#144870")
+        # Load the image (make sure the path is correct and file exists)
+        image_path = "exodigo-logo-32x32.png"
+        image = ctk.CTkImage(light_image=Image.open(image_path), size=(32, 32))
+        # Add a login button with image
+        login_button = ctk.CTkButton(
+            root,
+            text="Exodigo Login",
+            image=image,
+            compound="left",  # Image to the left of the text; use "top", "right", "bottom" as needed
+            corner_radius=30,
+            fg_color="#1f6aa5",
+            hover_color="#144870"
+        )
         login_button.pack(side="bottom", pady=20)
 
         def populate_dropdown():

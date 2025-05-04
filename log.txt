@@ -1,8 +1,116 @@
-2025-05-03 13:00:17,609 - INFO - Execution started.
-2025-05-03 13:00:17,611 - INFO - Launching GUI.
-2025-05-03 13:00:18,096 - INFO - Execution completed.
-2025-05-03 13:00:18,098 - INFO - Populating dropdown.
-2025-05-03 13:00:20,929 - INFO - Files found: ['Coursera OBUP0EHPKY7F.pdf', 'IFC_Pipes_Manholes_ST.log', 't.scr.csv']
-2025-05-03 16:30:52,093 - INFO - Launching GUI.
-2025-05-03 16:30:52,670 - INFO - Populating dropdown.
-2025-05-03 16:30:55,339 - INFO - Files found: ['Coursera OBUP0EHPKY7F.pdf', 'IFC_Pipes_Manholes_ST.log', 't.scr.csv']
+2025-05-03 18:00:35,069 - INFO - Execution started.
+2025-05-03 18:00:35,070 - INFO - Launching GUI.
+2025-05-03 18:00:35,128 - INFO - Execution completed.
+2025-05-03 18:00:35,196 - INFO - Populating dropdown.
+2025-05-03 18:00:35,744 - WARNING - Refreshing temporary credentials failed during mandatory refresh period.
+Traceback (most recent call last):
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 567, in _protected_refresh
+    metadata = self._refresh_using()
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 716, in fetch_credentials
+    return self._get_cached_credentials()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 726, in _get_cached_credentials
+    response = self._get_credentials()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2245, in _get_credentials
+    token = self._token_loader(self._start_url)['accessToken']
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\utils.py", line 3364, in __call__
+    raise SSOTokenLoadError(error_msg=error_msg)
+botocore.exceptions.SSOTokenLoadError: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:00:35,770 - ERROR - Error while populating dropdown: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:00:44,795 - INFO - Execution started.
+2025-05-03 18:00:44,798 - INFO - Launching GUI.
+2025-05-03 18:00:44,850 - INFO - Execution completed.
+2025-05-03 18:00:44,902 - INFO - Populating dropdown.
+2025-05-03 18:00:45,035 - WARNING - Refreshing temporary credentials failed during mandatory refresh period.
+Traceback (most recent call last):
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 567, in _protected_refresh
+    metadata = self._refresh_using()
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 716, in fetch_credentials
+    return self._get_cached_credentials()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 726, in _get_cached_credentials
+    response = self._get_credentials()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2245, in _get_credentials
+    token = self._token_loader(self._start_url)['accessToken']
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\utils.py", line 3364, in __call__
+    raise SSOTokenLoadError(error_msg=error_msg)
+botocore.exceptions.SSOTokenLoadError: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:00:45,036 - ERROR - Error while populating dropdown: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:03:08,436 - INFO - Execution started.
+2025-05-03 18:03:08,438 - INFO - Launching GUI.
+2025-05-03 18:03:08,445 - INFO - Execution completed.
+2025-05-03 18:03:09,154 - INFO - Populating dropdown.
+2025-05-03 18:03:09,663 - WARNING - Refreshing temporary credentials failed during mandatory refresh period.
+Traceback (most recent call last):
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 567, in _protected_refresh
+    metadata = self._refresh_using()
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 716, in fetch_credentials
+    return self._get_cached_credentials()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 726, in _get_cached_credentials
+    response = self._get_credentials()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2245, in _get_credentials
+    token = self._token_loader(self._start_url)['accessToken']
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\utils.py", line 3364, in __call__
+    raise SSOTokenLoadError(error_msg=error_msg)
+botocore.exceptions.SSOTokenLoadError: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:03:09,692 - ERROR - Error while populating dropdown: Error loading SSO Token: Token for https://exodigo.awsapps.com/start/ does not exist
+2025-05-03 18:03:48,679 - INFO - Login button clicked.
+2025-05-03 18:03:48,680 - INFO - Running SSO login.
+2025-05-03 18:04:13,001 - INFO - SSO login successful.
+2025-05-03 18:04:14,537 - INFO - Populating dropdown.
+2025-05-03 18:04:16,708 - INFO - Files found: ['Coursera OBUP0EHPKY7F.pdf', 'IFC_Pipes_Manholes_ST.log', 't.scr.csv']
+2025-05-04 08:35:48,765 - INFO - Execution started.
+2025-05-04 08:35:48,767 - INFO - Launching GUI.
+2025-05-04 08:35:48,775 - INFO - Execution completed.
+2025-05-04 08:35:49,568 - INFO - Populating dropdown.
+2025-05-04 08:35:50,993 - WARNING - Refreshing temporary credentials failed during mandatory refresh period.
+Traceback (most recent call last):
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2253, in _get_credentials
+    response = client.get_role_credentials(**kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\client.py", line 570, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\context.py", line 124, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\client.py", line 1031, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.UnauthorizedException: An error occurred (UnauthorizedException) when calling the GetRoleCredentials operation: Session token not found or invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 567, in _protected_refresh
+    metadata = self._refresh_using()
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 716, in fetch_credentials
+    return self._get_cached_credentials()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 726, in _get_cached_credentials
+    response = self._get_credentials()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2255, in _get_credentials
+    raise UnauthorizedSSOTokenError()
+botocore.exceptions.UnauthorizedSSOTokenError: The SSO session associated with this profile has expired or is otherwise invalid. To refresh this SSO session run aws sso login with the corresponding profile.
+2025-05-04 08:35:50,995 - ERROR - Error while populating dropdown: The SSO session associated with this profile has expired or is otherwise invalid. To refresh this SSO session run aws sso login with the corresponding profile.
+2025-05-04 08:35:54,040 - INFO - Login button clicked.
+2025-05-04 08:35:54,041 - INFO - Running SSO login.
+2025-05-04 08:36:20,603 - INFO - SSO login successful.
+2025-05-04 08:36:22,891 - INFO - Populating dropdown.
+2025-05-04 08:36:25,097 - INFO - Files found: ['Coursera OBUP0EHPKY7F.pdf', 'IFC_Pipes_Manholes_ST.log', 't.scr.csv']
+2025-05-04 09:53:55,326 - INFO - Execution started.
+2025-05-04 09:53:55,329 - INFO - Launching GUI.
+2025-05-04 09:53:55,826 - INFO - Execution completed.
+2025-05-04 09:53:55,935 - INFO - Populating dropdown.
+2025-05-04 09:53:58,494 - INFO - Files found: ['Coursera OBUP0EHPKY7F.pdf', 'IFC_Pipes_Manholes_ST.log', 'p1_s1_part1_water_pipe_course__projected_6991.csv', 't.scr.csv']
