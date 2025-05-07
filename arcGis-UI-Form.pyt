@@ -14,7 +14,13 @@ from requests_aws4auth import AWS4Auth
 import urllib.request
 from dotenv import load_dotenv
 import os
+import zipfile
+import time
 
+
+# Always load .env from script directory
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"), override=True)
+ #Load the .env file. the overrid -  ensures env file values override existing ones
 # Configure logging to log messages to a file
 log_path = os.path.join(os.path.dirname(__file__), "log.txt")
 logging.basicConfig(
@@ -22,7 +28,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-load_dotenv()  # Loads variables from .env into environment
+# Flag to indicate if the conversion is done
+conversion_done_event = threading.Event()
 #use environment variables to get the values of the following variables
 APPSYNC_API_URL = os.environ.get("APPSYNC_API_URL")
 AWS_REGION = os.environ.get("AWS_REGION")
@@ -47,13 +54,6 @@ class Tool:
 
     def getParameterInfo(self):
         # Define the input parameters for the tool
-        text_param = arcpy.Parameter(
-            displayName="Enter a name",  # Label for the parameter
-            name="name",  # Internal name
-            datatype="GPString",  # Data type
-            parameterType="Required",  # Required input
-            direction="Input"  # Input parameter
-        )
 
         dropdown_param = arcpy.Parameter(
             displayName="Choose an option",  # Label for the parameter
@@ -67,7 +67,7 @@ class Tool:
         dropdown_param.filter.list = ["Option A", "Option B", "Option C"]
         dropdown_param.value = "Option A"  # Default value
 
-        return [text_param, dropdown_param]
+        return [dropdown_param]
 
     def isLicensed(self):
         # Indicate that the tool is licensed to run
@@ -85,11 +85,44 @@ class Tool:
         # Log the start of execution and launch the GUI in a separate thread
         logging.info("Execution started.")
         threading.Thread(target=self.launch_gui, daemon=True).start()
+        logging.info("this log is from the main thread")
+        self.wait_and_run_add_to_map()
+
+        
+    def wait_and_run_add_to_map(self, timeout=300):
+        logging.info("Waiting for conversion to complete (flag)...")
+        is_set = conversion_done_event.wait(timeout=timeout)
+        if not is_set:
+            logging.error("Timeout: Conversion did not complete after waiting.")
+            return
+        # Add geojson files to the map
+        self.add_features_to_map()
+        logging.info("Conversion flag detected, proceeding to add features to map.")
+
+
+    def add_features_to_map(self):
+        logging.info(f"Run the map placement on the main thread!!!!!!!!!!!.")
+        aprx = arcpy.mp.ArcGISProject("CURRENT")
+        m = aprx.activeMap
+        logging.info("has map object")
+        with open("C:/temp_arcgis_geojson/geojson_outputs.txt", "r") as f:
+            for line in f:
+                fc_path = line.strip()
+                if arcpy.Exists(fc_path):
+                    m.addDataFromPath(fc_path)
+
 
     def launch_gui(self):
         """Launch the main GUI application."""
         logging.info("Launching GUI.")
         # Set the appearance and theme for the customtkinter GUI
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        image_path = os.path.join(script_dir, "exodigo-logo-32x32.png")
+        if os.path.exists(image_path):
+            logging.info(f"Image file exists at: {os.path.abspath(image_path)}")
+        else:
+            logging.error(f"Image file not found at: {os.path.abspath(image_path)}")
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("dark-blue")#set the color theme to dark-blue
 
@@ -99,7 +132,8 @@ class Tool:
         root.geometry("400x300")
         root.resizable(False, False)
         # Set custom window icon
-        root.wm_iconbitmap("exodigo-logo-32x32.ico") 
+        icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
+        root.wm_iconbitmap(icon_path)
 
         #====================================================================================================================#
         #dropdown menu for getting s3 bucket files
@@ -154,50 +188,6 @@ class Tool:
         download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
         download_button.pack_forget()  # Hide initiall
 
-
-    #Populate files in s3 bucket dropdown menu
-        def populate_dropdown():
-            """Populate the dropdown menu with file names from an S3 bucket."""
-            logging.info("Populating dropdown.")
-            try:
-                # Create a boto3 session using the "prod" profile
-                try:
-                    session = boto3.Session(profile_name=AWS_PROFILE)
-                    s3 = session.client("s3")
-                except BotoCoreError as e:
-                    logging.error(f"BotoCoreError: {e}")
-                    # Handle missing SSO token error
-                    if "SSO token" in str(e):
-                        messagebox.showerror("AWS SSO Token Missing", "SSO token is missing. Please log in using Exodigo Login.")
-                        combo_var.set("Please log in first")
-                        combo.configure(values=["Please log in first"])
-                        return
-                    raise
-                
-                # Specify the S3 bucket name and list its contents
-                bucket_name = BUCKET_NAME_SITES
-                response = s3.list_objects_v2(Bucket=bucket_name)
-                file_names = [obj["Key"] for obj in response.get("Contents", [])]
-
-                # Update the dropdown menu with the file names
-                if file_names:
-                    logging.info(f"Files found: {file_names}")
-                    combo_var.set(file_names[0])
-                    combo.configure(values=file_names)
-                    login_button.pack_forget()  # Hide the login button if files are found
-                else:
-                    logging.warning("No files found in the bucket.")
-                    combo_var.set("No files found")
-                    combo.configure(values=["No files found"])
-            except (NoCredentialsError, BotoCoreError) as e:
-                logging.error(f"Error while populating dropdown: {e}")
-                combo_var.set("Please log in first")
-                combo.configure(values=["Please log in first"])
-                # Show an error message if login fails
-                if "SSO session" in str(e):
-                    messagebox.showerror("AWS Login Failed", "SSO session expired. Please confirm your identity in the opened browser window.")
-                else:
-                    messagebox.showerror("AWS Login Failed", f"Error: {str(e)}")
 
         def run_sso_login():
             """Run the AWS SSO login process."""
@@ -278,7 +268,6 @@ class Tool:
                         s3_ref = site.get("s3_ref")
                         if name and s3_ref:
                             site_dict[name] = s3_ref
-                logging.info(f"Fetched site names and refs: {site_dict}")
                 if not site_dict:
                     site_dict["No site names found"] = None
             except Exception as e:
@@ -336,15 +325,120 @@ class Tool:
                 logging.error(f"Failed to download file: {e}")
                 messagebox.showerror("Download Failed", f"Error: {str(e)}")
 
+
+
+        # After download_site_zip, add:
+        def unzip_site_file(zip_path, extract_to):
+            """Unzip the downloaded site zip file to the specified folder."""
+            try:
+                with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                    zip_ref.extractall(extract_to)
+                logging.info(f"Unzipped {zip_path} to {extract_to}")
+                return True
+            except Exception as e:
+                logging.error(f"Failed to unzip file: {e}")
+                messagebox.showerror("Unzip Failed", f"Error: {str(e)}")
+                return False
+        
+        
+        #run json to feature command for each geojson file in the unzipped folder
+        def json_to_feature_for_folder(unzipped_folder, gdb_path):
+            """Loop through subfolders and run JSONToFeatures for each geojson file, then add to map."""
+            logging.info(f"Processing folder: {unzipped_folder} to get json files")
+             # Ensure the temp folder that will contain the .gdb file paths exists
+            temp_folder = "C:/temp_arcgis_geojson"
+            if not os.path.exists(temp_folder):
+                os.makedirs(temp_folder)
+                logging.info(f"Created folder: {temp_folder}")
+            
+            # Add the file path to a "geojson_outputs.txt" file for future reference
+            output_file = os.path.join(temp_folder, "geojson_outputs.txt")
+            if os.path.exists(output_file):
+                os.remove(output_file)  # Delete the existing file
+            for subfolder in os.listdir(unzipped_folder):
+                subfolder_path = os.path.join(unzipped_folder, subfolder)
+                if os.path.isdir(subfolder_path):
+                    for filename in os.listdir(subfolder_path):
+                        if filename.endswith(".geojson"):
+                            file_path = os.path.join(subfolder_path, filename)
+                            # Determine geometry type
+                            if "MultiPoint" in filename:
+                                geometry_type = "MULTIPOINT"
+                            elif "Point" in filename:
+                                geometry_type = "POINT"
+                            elif "Polygon" in filename:
+                                geometry_type = "POLYGON"
+                            elif "LineString" in filename:
+                                geometry_type = "POLYLINE"
+                            else:
+                                logging.warning(f"Unknown geometry type for {filename}, skipping.")
+                                continue
+                            # Output feature class name (remove .geojson and illegal chars)
+                            out_name = os.path.splitext(filename)[0].replace(".", "_").replace("-", "_")
+                            out_features = os.path.join(gdb_path, out_name)
+                            try:
+                                if arcpy.Exists(out_features):
+                                    arcpy.Delete_management(out_features)
+                                arcpy.conversion.JSONToFeatures(
+                                    in_json_file=file_path,
+                                    out_features=out_features,
+                                    geometry_type=geometry_type
+                                )
+                                logging.info(f"Converted {file_path} to {out_features} ({geometry_type})")
+                                with open(output_file, "a") as f:
+                                    f.write(f"{out_features}\n")
+                                logging.info(f"Added {out_features} to {output_file}")
+                            except Exception as e:
+                                logging.error(f"Failed to convert {file_path}: {e}")
+                
+            messagebox.showinfo("Files Successfully added", "All files were successfully added to the project's Database.")       
+            response = messagebox.askyesno("Add to Map", "Conversion complete. Add layers to the map?")
+            if response:
+                #set flag to true and notify the main thread to stop waiting- and run the add_to_map function
+                conversion_done_event.set()
+                logging.info(f"Flag was set to true")
+                
+  
+
+
+
+        # triggered when user clicks on the downloiad button
         def on_site_selected():
             """Handle the event when a site is selected from the dropdown."""
             selected_site_name = combo_var.get()
             s3_ref = site_dict.get(selected_site_name)
             if s3_ref:
-                threading.Thread(target=download_site_zip, args=(s3_ref,), daemon=True).start()
+                def process():
+                    zip_filename = f"{s3_ref}.site_export.geojson.zip"
+                    unzip_folder = os.path.join(os.getcwd(), f"{s3_ref}.site_export.geojson")
+                    gdb_path = None
+                    # Download and unzip in background thread
+                    download_site_zip(s3_ref)
+                    if unzip_site_file(zip_filename, unzip_folder):
+                        # Find or create .gdb
+                        gdbs = [f for f in os.listdir(os.getcwd()) if f.endswith(".gdb")]
+                        template_gdbs = [f for f in gdbs if "template_v" in f.lower()]
+                        if template_gdbs:
+                            gdb_path = os.path.join(os.getcwd(), template_gdbs[0])
+                            logging.info(f"Using template FileGDB: {gdb_path}")
+                        elif gdbs:
+                            gdb_path = os.path.join(os.getcwd(), gdbs[0])
+                            logging.info(f"Using existing FileGDB: {gdb_path}")
+                        else:
+                            gdb_path = os.path.join(os.getcwd(), f"{selected_site_name}.gdb")
+                            arcpy.management.CreateFileGDB(os.getcwd(), f"{selected_site_name}.gdb")
+                            logging.info(f"Created new FileGDB: {gdb_path}")
+                        # Now run arcpy conversion in the main thread
+                        def run_conversion():
+                            json_to_feature_for_folder(unzip_folder, gdb_path)
+                            messagebox.showinfo("Success", f"All GeoJSON files converted to {gdb_path}")
+                        root.after(0, run_conversion)
+                threading.Thread(target=process, daemon=True).start()
             else:
                 messagebox.showerror("Error", "Could not find s3_ref for the selected site.")
-                
+
+
+
         # After login_button.configure(command=on_login)
         threading.Thread(target=fetch_and_render_sites, daemon=True).start()
         # Start the main event loop for the GUI

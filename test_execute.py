@@ -14,7 +14,8 @@ from requests_aws4auth import AWS4Auth
 import urllib.request
 from dotenv import load_dotenv
 import os
-
+import arcpy
+import zipfile
 
 logging.basicConfig(
     filename="log.txt",
@@ -37,6 +38,14 @@ def launch_gui():
     """Launch the main GUI application."""
     logging.info("Launching GUI.")
     # Set the appearance and theme for the customtkinter GUI
+    logging.info(f"APPSYNC_API_URL = {APPSYNC_API_URL}")
+    logging.info(f"AWS_PROFILE = {AWS_PROFILE}")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_dir, "exodigo-logo-32x32.png")
+    if os.path.exists(image_path):
+        logging.info(f"Image file exists at: {os.path.abspath(image_path)}")
+    else:
+        logging.error(f"Image file not found at: {os.path.abspath(image_path)}")
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")#set the color theme to dark-blue
 
@@ -46,7 +55,8 @@ def launch_gui():
     root.geometry("400x300")
     root.resizable(False, False)
     # Set custom window icon
-    root.wm_iconbitmap("exodigo-logo-32x32.ico") 
+    icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
+    root.wm_iconbitmap(icon_path)
 
     #====================================================================================================================#
     #dropdown menu for getting s3 bucket files
@@ -69,10 +79,10 @@ def launch_gui():
     combo_var = ctk.StringVar(value="Loading...")
     combo = ctk.CTkComboBox(root, variable=combo_var, values=["Loading..."], width=300)
     combo.place(x=10, y=120)  # Align the dropdown menu with the label and filter entry
-     #====================================================================================================================#
+    #====================================================================================================================#
     #dropdown menu for getting s3 bucket files
     #====================================================================================================================#
-   
+
 
     # Load the image (make sure the path is correct and file exists)
     image_path = "exodigo-logo-32x32.png"
@@ -225,7 +235,6 @@ def launch_gui():
                     s3_ref = site.get("s3_ref")
                     if name and s3_ref:
                         site_dict[name] = s3_ref
-            logging.info(f"Fetched site names and refs: {site_dict}")
             if not site_dict:
                 site_dict["No site names found"] = None
         except Exception as e:
@@ -283,15 +292,123 @@ def launch_gui():
             logging.error(f"Failed to download file: {e}")
             messagebox.showerror("Download Failed", f"Error: {str(e)}")
 
+
+
+    # After download_site_zip, add:
+    def unzip_site_file(zip_path, extract_to):
+        """Unzip the downloaded site zip file to the specified folder."""
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_to)
+            logging.info(f"Unzipped {zip_path} to {extract_to}")
+            return True
+        except Exception as e:
+            logging.error(f"Failed to unzip file: {e}")
+            messagebox.showerror("Unzip Failed", f"Error: {str(e)}")
+            return False
+    
+    
+    #run json to feature command for each geojson file in the unzipped folder
+    def json_to_feature_for_folder(unzipped_folder, gdb_path):
+        """Loop through subfolders and run JSONToFeatures for each geojson file, then add to map."""
+        logging.info(f"Processing folder: {unzipped_folder} to get json files")
+        # Ensure the temp folder that will contain the .gdb file paths exists
+        temp_folder = "C:/temp_arcgis_geojson"
+        if not os.path.exists(temp_folder):
+            os.makedirs(temp_folder)
+            logging.info(f"Created folder: {temp_folder}")
+        
+        # Add the file path to a "geojson_outputs.txt" file for future reference
+        output_file = os.path.join(temp_folder, "geojson_outputs.txt")
+        if os.path.exists(output_file):
+            os.remove(output_file)  # Delete the existing file
+        for subfolder in os.listdir(unzipped_folder):
+            subfolder_path = os.path.join(unzipped_folder, subfolder)
+            if os.path.isdir(subfolder_path):
+                for filename in os.listdir(subfolder_path):
+                    if filename.endswith(".geojson"):
+                        file_path = os.path.join(subfolder_path, filename)
+                        # Determine geometry type
+                        if "MultiPoint" in filename:
+                            geometry_type = "MULTIPOINT"
+                        elif "Point" in filename:
+                            geometry_type = "POINT"
+                        elif "Polygon" in filename:
+                            geometry_type = "POLYGON"
+                        elif "LineString" in filename:
+                            geometry_type = "POLYLINE"
+                        else:
+                            logging.warning(f"Unknown geometry type for {filename}, skipping.")
+                            continue
+                        # Output feature class name (remove .geojson and illegal chars)
+                        out_name = os.path.splitext(filename)[0].replace(".", "_").replace("-", "_")
+                        out_features = os.path.join(gdb_path, out_name)
+                        try:
+                            if arcpy.Exists(out_features):
+                                arcpy.Delete_management(out_features)
+                            arcpy.conversion.JSONToFeatures(
+                                in_json_file=file_path,
+                                out_features=out_features,
+                                geometry_type=geometry_type
+                            )
+                            logging.info(f"Converted {file_path} to {out_features} ({geometry_type})")
+                            with open(output_file, "a") as f:
+                                f.write(f"{out_features}\n")
+                            logging.info(f"Added {out_features} to {output_file}")
+                        except Exception as e:
+                            logging.error(f"Failed to convert {file_path}: {e}")
+            # Save the project after all layers are added
+
+
+        messagebox.showinfo("Files Successfully added", "All files were successfully added to the project's Database.")       
+        response = messagebox.askyesno("Add to Map", "Conversion complete. Add layers to the map?")
+        if response:
+            run_add_to_map_tool()
+
+
+
+
+    # triggered when user clicks on the downloiad button
     def on_site_selected():
         """Handle the event when a site is selected from the dropdown."""
         selected_site_name = combo_var.get()
         s3_ref = site_dict.get(selected_site_name)
         if s3_ref:
-            threading.Thread(target=download_site_zip, args=(s3_ref,), daemon=True).start()
+            def process():
+                zip_filename = f"{s3_ref}.site_export.geojson.zip"
+                unzip_folder = os.path.join(os.getcwd(), f"{s3_ref}.site_export.geojson")
+                gdb_path = None
+                # Download and unzip in background thread
+                download_site_zip(s3_ref)
+                if unzip_site_file(zip_filename, unzip_folder):
+                    # Find or create .gdb
+                    gdbs = [f for f in os.listdir(os.getcwd()) if f.endswith(".gdb")]
+                    template_gdbs = [f for f in gdbs if "template_v" in f.lower()]
+                    if template_gdbs:
+                        gdb_path = os.path.join(os.getcwd(), template_gdbs[0])
+                        logging.info(f"Using template FileGDB: {gdb_path}")
+                    elif gdbs:
+                        gdb_path = os.path.join(os.getcwd(), gdbs[0])
+                        logging.info(f"Using existing FileGDB: {gdb_path}")
+                    else:
+                        gdb_path = os.path.join(os.getcwd(), f"{selected_site_name}.gdb")
+                        arcpy.management.CreateFileGDB(os.getcwd(), f"{selected_site_name}.gdb")
+                        logging.info(f"Created new FileGDB: {gdb_path}")
+                    # Now run arcpy conversion in the main thread
+                    def run_conversion():
+                        json_to_feature_for_folder(unzip_folder, gdb_path)
+                        messagebox.showinfo("Success", f"All GeoJSON files converted to {gdb_path}")
+                    root.after(0, run_conversion)
+            threading.Thread(target=process, daemon=True).start()
         else:
             messagebox.showerror("Error", "Could not find s3_ref for the selected site.")
-            
+
+    def run_add_to_map_tool():
+        tb=arcpy.ImportToolbox(r"C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\add_features_to_map.pyt", "maptool")
+
+        logging.info("Running add_features_to_map tool.")
+        tb.Tool()# Use the alias and class name to call the tool
+
     # After login_button.configure(command=on_login)
     threading.Thread(target=fetch_and_render_sites, daemon=True).start()
     # Start the main event loop for the GUI

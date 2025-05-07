@@ -1,0 +1,6 @@
+﻿import sys import os  print("Python executable:", sys.executable) print("Environment name:", os.path.basename(os.path.dirname(sys.executable)))
+aprx = arcpy.mp.ArcGISProject("CURRENT")
+aprx.filePath
+aprx=""
+aprx = arcpy.mp.ArcGISProject('C:\\Users\\Orlevi\\Documents\\ArcGIS\\Projects\\ArcGis-UI-POC\\ArcGis-UI-POC.aprx')
+aprx.filePath
