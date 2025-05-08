@@ -110,6 +110,17 @@ def launch_gui():
     )
     download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
     download_button.pack_forget()  # Hide initiall
+        #create a n "upload for inspection" button
+    upload_button = ctk.CTkButton(
+        root,
+        text="Upload for Inspection",
+        corner_radius=6,
+        fg_color="#219ebc",
+        hover_color="#06d6a0",
+        command=lambda: upload_for_inspection()
+    )
+
+    upload_button.place(x=10, y=200)  # Align with the left side of the combobox and place below it
 
 
 #Populate files in s3 bucket dropdown menu
@@ -141,7 +152,7 @@ def launch_gui():
                 logging.info(f"Files found: {file_names}")
                 combo_var.set(file_names[0])
                 combo.configure(values=file_names)
-                login_button.pack_forget()  # Hide the login button if files are found
+                login_button.destroy()  # Completely remove the login button from the form
             else:
                 logging.warning("No files found in the bucket.")
                 combo_var.set("No files found")
@@ -251,7 +262,7 @@ def launch_gui():
             if filtered:
                 combo_var.set(filtered[0])
                 combo.configure(values=filtered)
-                download_button.pack(side="right", padx=10, pady=0)  # Show download button
+                download_button.pack(side="left", padx=10, pady=0)  # Show download button
 
             else:
                 combo_var.set("No sites found")
@@ -261,7 +272,7 @@ def launch_gui():
             combo_var.set("No sites found")
             combo.configure(values=["No sites found"])
             download_button.pack_forget()
-        login_button.pack_forget()
+        login_button.destroy()  # Remove the login button if sites are loaded
 
     def fetch_and_render_sites():
         fetch_sites()

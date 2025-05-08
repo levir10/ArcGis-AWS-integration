@@ -28,8 +28,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-# Flag to indicate if the conversion is done
-conversion_done_event = threading.Event()
+# Flags to indicate if the conversion is done
+activate_main_thread = threading.Event()
+place_layers_on_map_flag = threading.Event()
+upload_files_flag = threading.Event()
 #use environment variables to get the values of the following variables
 APPSYNC_API_URL = os.environ.get("APPSYNC_API_URL")
 AWS_REGION = os.environ.get("AWS_REGION")
@@ -82,22 +84,34 @@ class Tool:
         return
 
     def execute(self, parameters, messages):
-        # Log the start of execution and launch the GUI in a separate thread
         logging.info("Execution started.")
         threading.Thread(target=self.launch_gui, daemon=True).start()
         logging.info("this log is from the main thread")
-        self.wait_and_run_add_to_map()
+        iteration=0
+        while True:
+            logging.info(f"Waiting for main thread: activation number: {iteration}")
+            self.wait_and_run_main_thread()
 
         
-    def wait_and_run_add_to_map(self, timeout=300):
-        logging.info("Waiting for conversion to complete (flag)...")
-        is_set = conversion_done_event.wait(timeout=timeout)
+    def wait_and_run_main_thread(self, timeout=600):
+        logging.info("Waiting for main thread activation...")
+        is_set = activate_main_thread.wait(timeout=timeout)
         if not is_set:
-            logging.error("Timeout: Conversion did not complete after waiting.")
+            logging.error("Timeout: No main thread action triggered.")
             return
-        # Add geojson files to the map
-        self.add_features_to_map()
-        logging.info("Conversion flag detected, proceeding to add features to map.")
+
+        # Now check which action to perform
+        if place_layers_on_map_flag.is_set():
+            self.add_features_to_map()
+            place_layers_on_map_flag.clear()
+            logging.info("Ran add_features_to_map from main thread.")
+
+        elif upload_files_flag.is_set():
+            self.export_features_to_geojson()
+            upload_files_flag.clear()
+            logging.info("Ran export_features_to_geojson from main thread.")
+
+        activate_main_thread.clear()  # Reset for next use
 
 
     def add_features_to_map(self):
@@ -110,7 +124,30 @@ class Tool:
                 fc_path = line.strip()
                 if arcpy.Exists(fc_path):
                     m.addDataFromPath(fc_path)
-
+    def export_features_to_geojson(self):
+        logging.info("Exporting template features to GeoJSON...")
+        #Feature types from the exodigo template
+        feature_types = [
+            "Lines", "OH_Poles", "OH_Lines", "QC_Polygons", "Excavations",
+            "Scanned_area", "Unscanned_area", "Site_Classification", "Manholes", "Elements"
+        ]
+        project_folder = os.getcwd()  # Or use your project folder logic
+        for feature in feature_types:
+            out_json = os.path.join(project_folder, f"{feature}_FeaturesToJSON.geojson")
+            try:
+                arcpy.conversion.FeaturesToJSON(
+                    in_features=feature,
+                    out_json_file=out_json,
+                    format_json="FORMATTED",
+                    include_z_values="Z_VALUES",
+                    include_m_values="NO_M_VALUES",
+                    geoJSON="GEOJSON",
+                    outputToWGS84="WGS84",
+                    use_field_alias="USE_FIELD_NAME"
+                )
+                logging.info(f"Exported {feature} to {out_json}")
+            except Exception as e:
+                logging.error(f"Failed to export {feature}: {e}")
 
     def launch_gui(self):
         """Launch the main GUI application."""
@@ -187,6 +224,19 @@ class Tool:
         )
         download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
         download_button.pack_forget()  # Hide initiall
+
+        #create a n "upload for inspection" button
+        upload_button = ctk.CTkButton(
+            root,
+            text="Upload for Inspection",
+            corner_radius=6,
+            fg_color="#219ebc",
+            hover_color="#06d6a0",
+            command=lambda: upload_for_inspection()
+        )
+
+        upload_button.place(x=10, y=200)  # Align with the left side of the combobox and place below it
+
 
 
         def run_sso_login():
@@ -284,7 +334,7 @@ class Tool:
                 if filtered:
                     combo_var.set(filtered[0])
                     combo.configure(values=filtered)
-                    download_button.pack(side="right", padx=10, pady=0)  # Show download button
+                    download_button.pack(side="left", padx=10, pady=0)  # Show download button
 
                 else:
                     combo_var.set("No sites found")
@@ -395,8 +445,10 @@ class Tool:
             response = messagebox.askyesno("Add to Map", "Conversion complete. Add layers to the map?")
             if response:
                 #set flag to true and notify the main thread to stop waiting- and run the add_to_map function
-                conversion_done_event.set()
+                activate_main_thread.set()
+                place_layers_on_map_flag.set()
                 logging.info(f"Flag was set to true")
+                download_button.configure(state="normal")  # Re-enable the download button
                 
   
 
@@ -404,7 +456,9 @@ class Tool:
 
         # triggered when user clicks on the downloiad button
         def on_site_selected():
-            """Handle the event when a site is selected from the dropdown."""
+            """Handle the event when a user presses the download button and site is selected from the dropdown."""
+            #make the download_button unresponsive until the download is done
+            download_button.configure(state="disabled")
             selected_site_name = combo_var.get()
             s3_ref = site_dict.get(selected_site_name)
             if s3_ref:
@@ -436,6 +490,19 @@ class Tool:
                 threading.Thread(target=process, daemon=True).start()
             else:
                 messagebox.showerror("Error", "Could not find s3_ref for the selected site.")
+
+
+        def upload_for_inspection():
+            """Handle the event when a user presses the upload button.
+            This function will upload the selected site to the S3 bucket for inspection."""
+            # Implement the upload logic here
+            activate_main_thread.set()
+            upload_files_flag.set()
+            logging.info("Upload for inspection button clicked.")
+            
+            
+            
+
 
 
 
