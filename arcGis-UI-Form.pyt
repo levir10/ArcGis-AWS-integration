@@ -6,7 +6,7 @@ from tkinter import messagebox
 import os
 import threading
 import boto3
-from botocore.exceptions import BotoCoreError, NoCredentialsError
+from botocore.exceptions import BotoCoreError, TokenRetrievalError
 import subprocess
 import logging
 import requests
@@ -16,7 +16,8 @@ from dotenv import load_dotenv
 import os
 import zipfile
 import time
-
+import glob
+import json
 
 # Always load .env from script directory
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"), override=True)
@@ -32,15 +33,16 @@ logging.basicConfig(
 activate_main_thread = threading.Event()
 place_layers_on_map_flag = threading.Event()
 upload_files_flag = threading.Event()
-#use environment variables to get the values of the following variables
+stop_main_thread = threading.Event()
+#use environment variables to get the values of the following variables - FOR PREPRODUCTION TESTING ONLY
 APPSYNC_API_URL = os.environ.get("APPSYNC_API_URL")
 AWS_REGION = os.environ.get("AWS_REGION")
 AWS_PROFILE = os.environ.get("AWS_PROFILE", "default")
 BUCKET_NAME_SITES = os.environ.get("BUCKET_NAME_SITES", "exodb-sites-files")
 BUCKET_NAME_USER_LAYERS = os.environ.get("BUCKET_NAME_USER_LAYERS", "exodigo-sites-user-layers")
-# Configure logging to log messages to a file
+LAMBDA_FUNCTION_NAME=os.environ.get("LAMBDA_FUNCTION_NAME", "InvokeClashesCalculationMock")
 
-site_dict = {}  # {site_name: s3_ref}
+site_dict = {}  # define the dictionary that holds {site_name: s3_ref} --> linke between button name and s3_ref
 class Toolbox:
     def __init__(self):
         # Define the toolbox label, alias, and tools it contains
@@ -53,10 +55,15 @@ class Tool:
         # Define the tool label and description
         self.label = "Tool"
         self.description = ""
+        self.stop_threads = False
+
+    def set_buttons_state(self, download_state="normal", upload_state="normal"):
+        self.download_button.configure(state=download_state)
+        self.upload_button.configure(state=upload_state)
+
 
     def getParameterInfo(self):
         # Define the input parameters for the tool
-
         dropdown_param = arcpy.Parameter(
             displayName="Choose an option",  # Label for the parameter
             name="dropdown",  # Internal name
@@ -64,7 +71,7 @@ class Tool:
             parameterType="Required",  # Required input
             direction="Input"  # Input parameter
         )
-        # Define a list of options for the dropdown
+        # Define a list of options for the MOCK DROPDOWN to to show the use of ArcGis Pro basic gui
         dropdown_param.filter.type = "ValueList"
         dropdown_param.filter.list = ["Option A", "Option B", "Option C"]
         dropdown_param.value = "Option A"  # Default value
@@ -87,12 +94,16 @@ class Tool:
         logging.info("Execution started.")
         threading.Thread(target=self.launch_gui, daemon=True).start()
         logging.info("this log is from the main thread")
+        # self.wait_and_run_main_thread()
+        # to keep the tool running and waiting for the main thread to activate - use a while loop
         iteration=0
-        while True:
+        while not self.stop_threads:
             logging.info(f"Waiting for main thread: activation number: {iteration}")
             self.wait_and_run_main_thread()
+            iteration+=1
+        logging.info("Main thread ended.")
 
-        
+    #wait 10 minuts (timout==600) for the main thread to be activated by the user.
     def wait_and_run_main_thread(self, timeout=600):
         logging.info("Waiting for main thread activation...")
         is_set = activate_main_thread.wait(timeout=timeout)
@@ -100,20 +111,27 @@ class Tool:
             logging.error("Timeout: No main thread action triggered.")
             return
 
-        # Now check which action to perform
-        if place_layers_on_map_flag.is_set():
+        # Now check which action to perform - download_button or upload_button
+        if place_layers_on_map_flag.is_set():#download button was pressed
             self.add_features_to_map()
             place_layers_on_map_flag.clear()
             logging.info("Ran add_features_to_map from main thread.")
 
-        elif upload_files_flag.is_set():
+        elif upload_files_flag.is_set():#upload button was pressed
             self.export_features_to_geojson()
             upload_files_flag.clear()
             logging.info("Ran export_features_to_geojson from main thread.")
+        elif stop_main_thread.is_set():
+            logging.info("Main thread stopped by user.")
+            stop_main_thread.clear()
+        else:
+            #user pressed the download button but no site was selected
+            logging.error("No valid action triggered in the main thread.")
+            return
 
         activate_main_thread.clear()  # Reset for next use
 
-
+    #function that runs inside main thread to add the features from the database to the current map
     def add_features_to_map(self):
         logging.info(f"Run the map placement on the main thread!!!!!!!!!!!.")
         aprx = arcpy.mp.ArcGISProject("CURRENT")
@@ -124,11 +142,13 @@ class Tool:
                 fc_path = line.strip()
                 if arcpy.Exists(fc_path):
                     m.addDataFromPath(fc_path)
+
+    #function that runs inside the main thread to export the features from the database to geojson files
     def export_features_to_geojson(self):
         logging.info("Exporting template features to GeoJSON...")
-        #Feature types from the exodigo template
+        #Feature types taken from the exodigo template
         feature_types = [
-            "Lines", "OH_Poles", "OH_Lines", "QC_Polygons", "Excavations",
+            "Lines", "OH_Poles", "OH_Lines", "QC_Polygons", "Excavation",
             "Scanned_area", "Unscanned_area", "Site_Classification", "Manholes", "Elements"
         ]
         project_folder = os.getcwd()  # Or use your project folder logic
@@ -148,97 +168,93 @@ class Tool:
                 logging.info(f"Exported {feature} to {out_json}")
             except Exception as e:
                 logging.error(f"Failed to export {feature}: {e}")
+        threading.Thread(target=self.upload_files_to_s3, args=(project_folder,), daemon=True).start()
+        messagebox.showinfo("Success", f"All GeoJSON files downloaded to {project_folder}")
 
+    #function that runs inside the main thread to activate uploading to s3 and invoke the lambda function       
+    def upload_files_to_s3(self, project_folder):
+        logging.info(f"Uploading files to S3...")
+        self.upload_geojson_files_to_s3(
+            local_folder=project_folder,
+            s3_bucket=BUCKET_NAME_USER_LAYERS,
+            s3_prefix="arcgis_sync/layers/test_site",
+        )
+        self.invoke_clashes_lambda("test_site")
+
+    #function that uploads the geojson files to s3 bucket
+    def upload_geojson_files_to_s3(self,local_folder, s3_bucket, s3_prefix):
+        logging.info(f"Uploading GeoJSON files from {local_folder} to s3://{s3_bucket}/{s3_prefix}")
+        session = boto3.Session(profile_name=AWS_PROFILE)
+        s3 = session.client("s3")
+        geojson_files = glob.glob(os.path.join(local_folder, "*.geojson"))
+        logging.info(f"Found {len(geojson_files)} GeoJSON files to upload.")
+        for file_path in geojson_files:
+            file_name = os.path.basename(file_path)
+            s3_key = f"{s3_prefix}/{file_name}"
+            try:
+                s3.upload_file(file_path, s3_bucket, s3_key)
+                logging.info(f"Uploaded {file_path} to s3://{s3_bucket}/{s3_key}")
+            except Exception as e:
+                logging.error(f"Failed to upload {file_path}: {e}")
+
+    #function that invokes the lambda function to calculate clashes
+    def invoke_clashes_lambda(self, site_name):
+        session = boto3.Session(profile_name=AWS_PROFILE)
+        lambda_client = session.client("lambda")
+        payload = {
+            "site": site_name
+            # Add more keys if your Lambda expects them
+        }
+        try:
+            response = lambda_client.invoke(
+                FunctionName=LAMBDA_FUNCTION_NAME,
+                InvocationType="RequestResponse",
+                Payload=json.dumps(payload)
+            )
+            result = json.loads(response['Payload'].read())
+            logging.info(f"Lambda response: {result}")
+            if result.get("statusCode") == 200:
+                messagebox.showinfo("Lambda Success", "Clash calculation invoked successfully!")
+            else:
+                messagebox.showerror("Lambda Error", f"Lambda returned error: {result}")
+        except Exception as e:
+            logging.error(f"Failed to invoke Lambda: {e}")
+            messagebox.showerror("Lambda Error", f"Failed to invoke Lambda: {e}")
+        # Re-enable the buttons after Lambda invocation (must be called in main thread)
+        try:
+            # If called from a thread, use root.after to ensure main thread execution
+            root = None
+            for widget in tk._default_root.children.values():
+                if isinstance(widget, tk.Tk) or isinstance(widget, ctk.CTk):
+                    root = widget
+                    break
+        except Exception as e:
+            logging.error(f"Failed to re-enable buttons: {e}")
+         # Re-enable the buttons after Lambda invocation
+        try:
+            self.set_buttons_state(download_state="normal", upload_state="normal")
+        except Exception as e:
+            logging.error(f"Failed to re-enable buttons: {e}")
+
+        
     def launch_gui(self):
         """Launch the main GUI application."""
-        logging.info("Launching GUI.")
-        # Set the appearance and theme for the customtkinter GUI
-
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        image_path = os.path.join(script_dir, "exodigo-logo-32x32.png")
-        if os.path.exists(image_path):
-            logging.info(f"Image file exists at: {os.path.abspath(image_path)}")
-        else:
-            logging.error(f"Image file not found at: {os.path.abspath(image_path)}")
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")#set the color theme to dark-blue
-
-        # Create the main application window
-        root = ctk.CTk()
-        root.title("Exodigo ArcGis Integrator")
-        root.geometry("400x300")
-        root.resizable(False, False)
-        # Set custom window icon
-        icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
-        root.wm_iconbitmap(icon_path)
-
-        #====================================================================================================================#
-        #dropdown menu for getting s3 bucket files
-        #====================================================================================================================#
-        # Add a label to the GUI
+    #==============================================================================================#
+    #Helper functions
+    #==============================================================================================#
+        def on_close():
+                root.quit()
+                root.destroy()
+                activate_main_thread.set()  # Stop the main thread waiting
+                stop_main_thread.set()  # Stop the main thread waiting
+                logging.info("GUI closed by user. Stopping all threads.")
+                self.stop_threads = True
+        #set the state of the buttons to normal or disabled
+        def set_buttons_state(download_state="normal", upload_state="normal"):
+            self.download_button.configure(state=download_state)
+            self.upload_button.configure(state=upload_state)
         
-        label_main = ctk.CTkLabel(root, text="Select a site:", font=ctk.CTkFont(size=16, weight="bold"))
-        label_main.pack(pady=10)
-        
-        # Add a label for the filter entry
-        filter_label = ctk.CTkLabel(root, text="Type here to filter site names", font=ctk.CTkFont(size=12, weight="normal"))
-        filter_label.place(x=10, y=50)  # Set the x and y coordinates for the label
-
-        # Add a filter entry above the ComboBox
-        filter_var = ctk.StringVar()
-        filter_entry = ctk.CTkEntry(root, textvariable=filter_var, width=300)
-        filter_entry.place(x=10, y=80)  # Align the filter entry with the label
-
-        # Create a dropdown menu with a default "Loading..." value
-        combo_var = ctk.StringVar(value="Loading...")
-        combo = ctk.CTkComboBox(root, variable=combo_var, values=["Loading..."], width=300)
-        combo.place(x=10, y=120)  # Align the dropdown menu with the label and filter entry
-        #====================================================================================================================#
-        #dropdown menu for getting s3 bucket files
-        #====================================================================================================================#
-    
-
-        # Load the image (make sure the path is correct and file exists)
-        image_path = "exodigo-logo-32x32.png"
-        image = ctk.CTkImage(light_image=Image.open(image_path), size=(32, 32))
-        # Add a login button with image
-        login_button = ctk.CTkButton(
-            root,
-            text="Exodigo Login",
-            image=image,
-            compound="left",  # Image to the left of the text; use "top", "right", "bottom" as needed
-            corner_radius=20,
-            fg_color="#1f6aa5",
-            hover_color="#144870"
-        )
-        login_button.pack(side="bottom", pady=20)
-
-        # Create a download button (initially hidden - once site combobox is populated - it will be seen)
-        download_button = ctk.CTkButton(
-            root,
-            text="Download Site File",
-            corner_radius=6,
-                fg_color="#219ebc",
-            hover_color="#06d6a0",
-            command=lambda: on_site_selected()
-        )
-        download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
-        download_button.pack_forget()  # Hide initiall
-
-        #create a n "upload for inspection" button
-        upload_button = ctk.CTkButton(
-            root,
-            text="Upload for Inspection",
-            corner_radius=6,
-            fg_color="#219ebc",
-            hover_color="#06d6a0",
-            command=lambda: upload_for_inspection()
-        )
-
-        upload_button.place(x=10, y=200)  # Align with the left side of the combobox and place below it
-
-
-
+        # Run the AWS SSO login process in a separate thread
         def run_sso_login():
             """Run the AWS SSO login process."""
             logging.info("Running SSO login.")
@@ -247,25 +263,38 @@ class Tool:
                 subprocess.run(["aws", "sso", "login", "--profile", AWS_PROFILE], check=True)
                 logging.info("SSO login successful.")
                 messagebox.showinfo("SSO Login", "SSO login successful. Please try logging in again.")
-                # populate_dropdown()  # Re-populate the dropdown after successful login
+                login_button.configure(state="normal")  # Re-enable the button after login
+                login_button.pack_forget()  # Hide the login button after successful login
+                fetch_sites()  # Re-populate the dropdown after successful login
+                root.after(0, sites_selector)  # Call the sites_selector function to update the dropdown
             except subprocess.CalledProcessError as e:
                 logging.error(f"SSO login failed: {e}")
                 messagebox.showerror("SSO Login Failed", f"Error: {str(e)}")
-
+        ## Function to handle the login button click event
         def on_login():
             """Handle the login button click event."""
             logging.info("Login button clicked.")
+            login_button.configure(state="disabled")  # Disable the button to prevent multiple clicks
             # Run the SSO login process in a separate thread
             threading.Thread(target=run_sso_login, daemon=True).start()
 
-        # Configure the login button to call the on_login function
-        login_button.configure(command=on_login)
-        
-        # Populate the dropdown menu in a separate thread
-        # threading.Thread(target=populate_dropdown, daemon=True).start()
-    #=====================================================================================================================#
-        #dropdown menu for getting site names
-    #=====================================================================================================================#
+        def check_aws_sso_login(profile_name):
+            try:
+                session = boto3.Session(profile_name=profile_name)
+                # Try to get credentials (will fail if SSO token is missing/expired)
+                session.get_credentials().get_frozen_credentials()
+                return session
+            except (BotoCoreError, TokenRetrievalError) as e:
+                logging.error(f"AWS SSO Error: {e}")
+                messagebox.showerror(
+                    "AWS SSO Token Missing",
+                    "SSO token is missing or expired. Please log in using Exodigo Login."
+                )
+                combo_var.set("Please log in first")
+                combo.configure(values=["Please log in first"])
+                return None
+                
+        # Fetch the site list from the AppSync GraphQL API using IAM authentication
         def fetch_sites():
             """Fetch site list from AppSync GraphQL API using IAM auth and update site_dict."""
             global site_dict
@@ -289,7 +318,10 @@ class Tool:
                 }
             }
             """
-            session = boto3.Session(profile_name=AWS_PROFILE)
+            session = check_aws_sso_login(AWS_PROFILE)
+            if session is None:
+                return  # User needs to log in, so exit early
+
             credentials = session.get_credentials().get_frozen_credentials()
             awsauth = AWS4Auth(
                 credentials.access_key,
@@ -324,7 +356,8 @@ class Tool:
                 logging.error(f"Failed to fetch sites: {e}")
                 site_dict.clear()
                 site_dict["Failed to load sites"] = None
-
+        
+        #update dropdown menu with the filtered site names
         def sites_selector():
             """Update the dropdown menu with the filtered site names."""
             filter_text = filter_var.get().lower()
@@ -334,31 +367,34 @@ class Tool:
                 if filtered:
                     combo_var.set(filtered[0])
                     combo.configure(values=filtered)
-                    download_button.pack(side="left", padx=10, pady=0)  # Show download button
+                    self.download_button.place(x=10, y=160)
+                    self.download_button.pack(side="left", padx=10, pady=0)  # Show download button
+                    self.upload_button.place(x=10, y=200)  # Align with the left side of the combobox and place below it
+                    set_buttons_state(download_state="normal", upload_state="normal")
+                    # logging.info(f"Filtered sites: {filtered}")
+                    
 
                 else:
                     combo_var.set("No sites found")
                     combo.configure(values=["No sites found"])
-                    download_button.pack_forget()
+                    self.download_button.pack_forget()
+                    logging.info("No sites found after filtering.")
             else:
-                combo_var.set("No sites found")
+                combo_var.set("No sites found - make sure you are logged in")
                 combo.configure(values=["No sites found"])
-                download_button.pack_forget()
-            login_button.pack_forget()
-
+                self.download_button.pack_forget()
+                login_button.pack(side="bottom", pady=20)
+                logging.info("No sites found in the site_dict.")
+       
+        # Add a callback to the filter entry to update the dropdown when the filter changes
         def fetch_and_render_sites():
             fetch_sites()
             root.after(0, sites_selector)
+     
         # Add this after creating filter_entry
         def on_filter_change(*args):
-            sites_selector()
-
-        filter_var.trace_add("write", on_filter_change)
-
-        #=============================================================================================================#
+            sites_selector()    
         #get site files from s3 bucket
-        #=============================================================================================================#
-        
         def download_site_zip(s3_ref):
             """Download the site_export.geojson.zip file from S3 using boto3 (for private files)."""
             bucket_name = BUCKET_NAME_USER_LAYERS
@@ -375,8 +411,6 @@ class Tool:
                 logging.error(f"Failed to download file: {e}")
                 messagebox.showerror("Download Failed", f"Error: {str(e)}")
 
-
-
         # After download_site_zip, add:
         def unzip_site_file(zip_path, extract_to):
             """Unzip the downloaded site zip file to the specified folder."""
@@ -389,7 +423,6 @@ class Tool:
                 logging.error(f"Failed to unzip file: {e}")
                 messagebox.showerror("Unzip Failed", f"Error: {str(e)}")
                 return False
-        
         
         #run json to feature command for each geojson file in the unzipped folder
         def json_to_feature_for_folder(unzipped_folder, gdb_path):
@@ -448,17 +481,14 @@ class Tool:
                 activate_main_thread.set()
                 place_layers_on_map_flag.set()
                 logging.info(f"Flag was set to true")
-                download_button.configure(state="normal")  # Re-enable the download button
+                set_buttons_state(download_state="normal", upload_state="normal")
                 
-  
-
-
 
         # triggered when user clicks on the downloiad button
         def on_site_selected():
             """Handle the event when a user presses the download button and site is selected from the dropdown."""
             #make the download_button unresponsive until the download is done
-            download_button.configure(state="disabled")
+            set_buttons_state(download_state="disabled", upload_state="disabled")
             selected_site_name = combo_var.get()
             s3_ref = site_dict.get(selected_site_name)
             if s3_ref:
@@ -491,25 +521,108 @@ class Tool:
             else:
                 messagebox.showerror("Error", "Could not find s3_ref for the selected site.")
 
-
+        # Add the upload button functionality
         def upload_for_inspection():
             """Handle the event when a user presses the upload button.
             This function will upload the selected site to the S3 bucket for inspection."""
             # Implement the upload logic here
             activate_main_thread.set()
             upload_files_flag.set()
+            set_buttons_state(download_state="disabled", upload_state="disabled")
             logging.info("Upload for inspection button clicked.")
             
-            
-            
+    #==============================================================================================#
+    #Main GUI code
+    #==============================================================================================#    
+        logging.info("Launching GUI.")
+        # Set the appearance and theme for the customtkinter GUI
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        image_path = os.path.join(script_dir, "exodigo-logo-32x32.png")
+        if os.path.exists(image_path):
+            logging.info(f"Image file exists at: {os.path.abspath(image_path)}")
+        else:
+            logging.error(f"Image file not found at: {os.path.abspath(image_path)}")
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("dark-blue")#set the color theme to dark-blue
+
+        # Create the main application window
+        root = ctk.CTk()
+        root.title("Exodigo ArcGis Integrator")
+        root.geometry("400x300")
+        root.resizable(False, False)
+        # Set custom window icon
+        icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
+        root.wm_iconbitmap(icon_path)
+
+        # Add GUI elements
+        label_main = ctk.CTkLabel(root, text="Select a site:", font=ctk.CTkFont(size=16, weight="bold"))
+        label_main.pack(pady=10)
+        
+        # Add a label for the filter entry
+        filter_label = ctk.CTkLabel(root, text="Type here to filter site names", font=ctk.CTkFont(size=12, weight="normal"))
+        filter_label.place(x=10, y=50)  # Set the x and y coordinates for the label
+
+        # Add a filter entry above the ComboBox
+        filter_var = ctk.StringVar()
+        filter_entry = ctk.CTkEntry(root, textvariable=filter_var, width=300)
+        filter_entry.place(x=10, y=80)  # Align the filter entry with the label
+
+        # Create a dropdown menu with a default "Loading..." value
+        combo_var = ctk.StringVar(value="Loading...")
+        combo = ctk.CTkComboBox(root, variable=combo_var, values=["Loading..."], width=300)
+        combo.place(x=10, y=120)  # Align the dropdown menu with the label and filter entry
 
 
+        # Load the image (make sure the path is correct and file exists)
+        image_path = "exodigo-logo-32x32.png"
+        image = ctk.CTkImage(light_image=Image.open(image_path), size=(32, 32))
+        # Add a login button with image
+        login_button = ctk.CTkButton(
+            root,
+            text="Exodigo Login",
+            image=image,
+            compound="left",  # Image to the left of the text; use "top", "right", "bottom" as needed
+            corner_radius=20,
+            fg_color="#1f6aa5",
+            hover_color="#144870"
+        )
+        
 
+        # Create a download button (initially hidden - once site combobox is populated - it will be seen)
+        self.download_button = ctk.CTkButton(
+            root,
+            text="Download Site File",
+            corner_radius=6,
+                fg_color="#219ebc",
+            hover_color="#06d6a0",
+            command=lambda: on_site_selected()
+        )
+        # download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
+
+        #create an "upload for inspection" button
+        self.upload_button = ctk.CTkButton(
+            root,
+            text="Upload for Inspection",
+            corner_radius=6,
+            fg_color="#219ebc",
+            hover_color="#06d6a0",
+            command=lambda: upload_for_inspection()
+        )
+
+        # Configure the login button to call the on_login function
+        login_button.configure(command=on_login)
+
+        #filter to update the dropdown when the filter changes
+        filter_var.trace_add("write", on_filter_change)
 
         # After login_button.configure(command=on_login)
         threading.Thread(target=fetch_and_render_sites, daemon=True).start()
+
+        #Handle the GUI close event
+        root.protocol("WM_DELETE_WINDOW", on_close)
         # Start the main event loop for the GUI
         root.mainloop()
+
     def postExecute(self, parameters):
         # Log the completion of execution
         logging.info("Execution completed.")

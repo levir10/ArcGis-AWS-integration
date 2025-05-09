@@ -1,228 +1,137 @@
-2025-05-07 16:27:33,131 - INFO - Execution started.
-2025-05-07 16:27:33,133 - INFO - Launching GUI.
-2025-05-07 16:27:33,133 - INFO - this log is from the main thread
-2025-05-07 16:27:33,133 - INFO - Waiting for conversion to complete (flag)...
-2025-05-07 16:27:33,133 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-07 16:27:33,856 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-07 16:27:34,078 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-07 16:27:35,434 - INFO - SSO Token refresh succeeded
-2025-05-07 16:27:49,571 - INFO - Downloading file from s3://exodigo-sites-user-layers/download/Washington_Sound_Transit_Everett_EVLEArea3/Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-07 16:27:49,579 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-07 16:27:50,653 - INFO - SSO Token refresh succeeded
-2025-05-07 16:29:23,727 - INFO - Downloading file from s3://exodigo-sites-user-layers/download/Washington_Sound_Transit_Everett_EVLEArea3/Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-07 16:29:23,735 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-07 16:29:24,759 - INFO - SSO Token refresh succeeded
-2025-05-07 16:29:44,014 - INFO - File downloaded successfully: Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-07 16:29:49,613 - INFO - Unzipped Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson
-2025-05-07 16:29:49,613 - INFO - Using template FileGDB: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb
-2025-05-07 16:29:49,614 - INFO - Processing folder: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson to get json files
-2025-05-07 16:29:54,119 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\algo_pipes\algo_pipes__EPSG_None__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\algo_pipes__EPSG_None__LineString_arcgis (POLYLINE)
-2025-05-07 16:29:54,119 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\algo_pipes__EPSG_None__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:29:56,743 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis-depth__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis (POINT)
-2025-05-07 16:29:56,744 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:29:59,635 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis__EPSG_6596__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis (POLYLINE)
-2025-05-07 16:29:59,636 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:01,709 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis-depth__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis (POINT)
-2025-05-07 16:30:01,709 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:03,294 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6596__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis (POLYLINE)
-2025-05-07 16:30:03,295 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:03,658 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6596__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__Polygon_arcgis (POLYGON)
-2025-05-07 16:30:03,659 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:04,041 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\planned_polygons\planned_polygons__EPSG_None__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis (POLYGON)
-2025-05-07 16:30:04,042 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:04,544 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\pois\pois__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\pois__EPSG_6596__Point_arcgis (POINT)
-2025-05-07 16:30:04,545 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\pois__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:05,024 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\targets\targets__EPSG_6596__MultiPoint.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\targets__EPSG_6596__MultiPoint_arcgis (MULTIPOINT)
-2025-05-07 16:30:05,024 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\targets__EPSG_6596__MultiPoint_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:05,621 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\transmitters\main__EPSG_6596__MultiPoint.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\main__EPSG_6596__MultiPoint_arcgis (MULTIPOINT)
-2025-05-07 16:30:05,621 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\main__EPSG_6596__MultiPoint_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-07 16:30:09,973 - INFO - Flag was set to true
-2025-05-07 16:30:09,973 - INFO - Run the map placement on the main thread!!!!!!!!!!!.
-2025-05-07 16:30:09,974 - INFO - has map object
-2025-05-07 16:30:17,568 - INFO - Conversion flag detected, proceeding to add features to map.
-2025-05-07 16:30:18,044 - INFO - Execution completed.
-2025-05-07 16:35:29,355 - INFO - File downloaded successfully: Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-07 16:39:46,158 - INFO - Unzipped Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson
-2025-05-07 16:39:46,159 - INFO - Using template FileGDB: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb
-2025-05-08 07:46:52,009 - INFO - Launching GUI.
-2025-05-08 07:46:52,009 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:46:52,009 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:46:52,009 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:46:52,761 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:46:53,145 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:46:54,259 - WARNING - SSO token refresh attempt failed
-Traceback (most recent call last):
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\tokens.py", line 297, in _refresh_access_token
-    return self._attempt_create_token(token)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\tokens.py", line 256, in _attempt_create_token
-    response = self._client.create_token(
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\client.py", line 570, in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\context.py", line 124, in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\client.py", line 1031, in _make_api_call
-    raise error_class(parsed_response, operation_name)
-botocore.errorfactory.InvalidGrantException: An error occurred (InvalidGrantException) when calling the CreateToken operation: 
-2025-05-08 07:46:54,307 - WARNING - Refreshing temporary credentials failed during mandatory refresh period.
-Traceback (most recent call last):
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 567, in _protected_refresh
-    metadata = self._refresh_using()
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 716, in fetch_credentials
-    return self._get_cached_credentials()
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 726, in _get_cached_credentials
-    response = self._get_credentials()
-               ^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\credentials.py", line 2243, in _get_credentials
-    token = initial_token_data.get_frozen_token().token
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\tokens.py", line 82, in get_frozen_token
-    self._refresh()
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\tokens.py", line 95, in _refresh
-    self._protected_refresh()
-  File "c:\Program Files\ArcGIS\Pro\bin\Python\envs\test_moasic_dataset\Lib\site-packages\botocore\tokens.py", line 122, in _protected_refresh
-    raise TokenRetrievalError(
-botocore.exceptions.TokenRetrievalError: Error when retrieving token from sso: Token has expired and refresh failed
-2025-05-08 07:47:11,350 - INFO - Login button clicked.
-2025-05-08 07:47:11,353 - INFO - Running SSO login.
-2025-05-08 07:47:37,032 - INFO - SSO login successful.
-2025-05-08 07:47:55,458 - INFO - Launching GUI.
-2025-05-08 07:47:55,458 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:47:55,458 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:47:55,459 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:47:55,713 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:47:55,895 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:48:54,690 - INFO - Launching GUI.
-2025-05-08 07:48:54,690 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:48:54,690 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:48:54,690 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:48:54,983 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:48:55,182 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:49:15,733 - INFO - Launching GUI.
-2025-05-08 07:49:15,733 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:49:15,733 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:49:15,733 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:49:16,071 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:49:16,275 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:51:31,003 - INFO - Launching GUI.
-2025-05-08 07:51:31,005 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:51:31,005 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:51:31,005 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:51:31,317 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:51:31,522 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:57:19,303 - INFO - Launching GUI.
-2025-05-08 07:57:19,303 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:57:19,303 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:57:19,303 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:57:22,783 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:57:23,024 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:58:48,062 - INFO - Launching GUI.
-2025-05-08 07:58:48,063 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:58:48,063 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:58:48,063 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:58:51,617 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:58:51,791 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 07:59:48,259 - INFO - Launching GUI.
-2025-05-08 07:59:48,260 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 07:59:48,260 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 07:59:48,260 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 07:59:48,535 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 07:59:48,728 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 08:00:59,897 - INFO - Launching GUI.
-2025-05-08 08:00:59,898 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 08:00:59,898 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 08:00:59,899 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 08:02:06,012 - INFO - Launching GUI.
-2025-05-08 08:02:06,012 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 08:02:06,013 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 08:02:06,013 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 08:02:06,293 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 08:02:06,483 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 08:04:01,446 - INFO - Launching GUI.
-2025-05-08 08:04:01,446 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 08:04:01,446 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 08:04:01,447 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 08:04:01,706 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 08:04:01,892 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 08:04:34,958 - INFO - Launching GUI.
-2025-05-08 08:04:34,958 - INFO - APPSYNC_API_URL = https://4mrmwtbh2rh4rd6rrcgxd6vfue.appsync-api.us-east-1.amazonaws.com/graphql
-2025-05-08 08:04:34,958 - INFO - AWS_PROFILE = AdministratorAccess-065406314772
-2025-05-08 08:04:34,958 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 08:04:35,229 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 08:04:35,441 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 09:45:33,952 - INFO - Execution started.
-2025-05-08 09:45:33,953 - INFO - Launching GUI.
-2025-05-08 09:45:33,954 - INFO - this log is from the main thread
-2025-05-08 09:45:33,954 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 09:45:33,954 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
-2025-05-08 09:45:33,954 - INFO - Waiting for main thread activation...
-2025-05-08 09:45:34,836 - INFO - Fetching site list from GraphQL API (IAM auth).
-2025-05-08 09:45:35,122 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 09:45:36,436 - INFO - SSO Token refresh succeeded
-2025-05-08 09:45:50,299 - INFO - Downloading file from s3://exodigo-sites-user-layers/download/Washington_Sound_Transit_Everett_EVLEArea3/Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-08 09:45:50,307 - INFO - Loading cached SSO token for exodigo-prodb-sso
-2025-05-08 09:46:12,862 - INFO - File downloaded successfully: Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip
-2025-05-08 09:46:57,250 - INFO - Unzipped Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson.zip to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson
-2025-05-08 09:46:57,250 - INFO - Using template FileGDB: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb
-2025-05-08 09:46:57,251 - INFO - Processing folder: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson to get json files
-2025-05-08 09:47:02,466 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\algo_pipes\algo_pipes__EPSG_None__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\algo_pipes__EPSG_None__LineString_arcgis (POLYLINE)
-2025-05-08 09:47:02,468 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\algo_pipes__EPSG_None__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:05,700 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis-depth__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis (POINT)
-2025-05-08 09:47:05,700 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:08,852 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis__EPSG_6596__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis (POLYLINE)
-2025-05-08 09:47:08,853 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:10,647 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis-depth__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis (POINT)
-2025-05-08 09:47:10,648 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis_depth__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:11,908 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6596__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis (POLYLINE)
-2025-05-08 09:47:11,909 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:12,753 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6596__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__Polygon_arcgis (POLYGON)
-2025-05-08 09:47:12,762 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\analysis__EPSG_6596__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:13,607 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\planned_polygons\planned_polygons__EPSG_None__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis (POLYGON)
-2025-05-08 09:47:13,608 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:14,510 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\pois\pois__EPSG_6596__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\pois__EPSG_6596__Point_arcgis (POINT)
-2025-05-08 09:47:14,510 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\pois__EPSG_6596__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:15,367 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\targets\targets__EPSG_6596__MultiPoint.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\targets__EPSG_6596__MultiPoint_arcgis (MULTIPOINT)
-2025-05-08 09:47:15,368 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\targets__EPSG_6596__MultiPoint_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:16,350 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Washington_Sound_Transit_Everett_EVLEArea3.site_export.geojson\transmitters\main__EPSG_6596__MultiPoint.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\main__EPSG_6596__MultiPoint_arcgis (MULTIPOINT)
-2025-05-08 09:47:16,351 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\template_v1_5.gdb\main__EPSG_6596__MultiPoint_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
-2025-05-08 09:47:19,774 - INFO - Flag was set to true
-2025-05-08 09:47:19,774 - INFO - Run the map placement on the main thread!!!!!!!!!!!.
-2025-05-08 09:47:19,775 - INFO - has map object
-2025-05-08 09:47:23,757 - INFO - Ran add_features_to_map from main thread.
-2025-05-08 09:47:23,757 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 09:47:23,757 - INFO - Waiting for main thread activation...
-2025-05-08 09:47:32,945 - INFO - Upload for inspection button clicked.
-2025-05-08 09:47:32,945 - INFO - Exporting template features to GeoJSON...
-2025-05-08 09:47:33,496 - INFO - Exported Lines to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Lines_FeaturesToJSON.geojson
-2025-05-08 09:47:33,594 - INFO - Exported OH_Poles to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\OH_Poles_FeaturesToJSON.geojson
-2025-05-08 09:47:33,693 - INFO - Exported OH_Lines to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\OH_Lines_FeaturesToJSON.geojson
-2025-05-08 09:47:33,788 - INFO - Exported QC_Polygons to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\QC_Polygons_FeaturesToJSON.geojson
-2025-05-08 09:47:33,836 - ERROR - Failed to export Excavations: Failed to execute. Parameters are not valid.
-ERROR 000732: Input Features: Dataset Excavations does not exist or is not supported
-Failed to execute (FeaturesToJSON).
-
-2025-05-08 09:47:33,920 - INFO - Exported Scanned_area to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Scanned_area_FeaturesToJSON.geojson
-2025-05-08 09:47:34,009 - INFO - Exported Unscanned_area to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Unscanned_area_FeaturesToJSON.geojson
-2025-05-08 09:47:34,124 - INFO - Exported Site_Classification to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Site_Classification_FeaturesToJSON.geojson
-2025-05-08 09:47:34,380 - INFO - Exported Manholes to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Manholes_FeaturesToJSON.geojson
-2025-05-08 09:47:34,710 - INFO - Exported Elements to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-templateProj\Elements_FeaturesToJSON.geojson
-2025-05-08 09:47:34,711 - INFO - Ran export_features_to_geojson from main thread.
-2025-05-08 09:47:34,711 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 09:47:34,711 - INFO - Waiting for main thread activation...
-2025-05-08 09:57:34,711 - ERROR - Timeout: No main thread action triggered.
-2025-05-08 09:57:34,711 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 09:57:34,711 - INFO - Waiting for main thread activation...
-2025-05-08 10:07:34,712 - ERROR - Timeout: No main thread action triggered.
-2025-05-08 10:07:34,712 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 10:07:34,712 - INFO - Waiting for main thread activation...
-2025-05-08 10:17:34,712 - ERROR - Timeout: No main thread action triggered.
-2025-05-08 10:17:34,712 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 10:17:34,712 - INFO - Waiting for main thread activation...
-2025-05-08 10:27:34,713 - ERROR - Timeout: No main thread action triggered.
-2025-05-08 10:27:34,713 - INFO - Waiting for main thread: activation number: 0
-2025-05-08 10:27:34,713 - INFO - Waiting for main thread activation...
+2025-05-09 15:37:31,632 - INFO - Execution started.
+2025-05-09 15:37:31,633 - INFO - Launching GUI.
+2025-05-09 15:37:31,634 - INFO - this log is from the main thread
+2025-05-09 15:37:31,634 - INFO - Waiting for main thread: activation number: 0
+2025-05-09 15:37:31,634 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
+2025-05-09 15:37:31,634 - INFO - Waiting for main thread activation...
+2025-05-09 15:37:31,798 - INFO - Fetching site list from GraphQL API (IAM auth).
+2025-05-09 15:37:31,955 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:37:39,633 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:39,633 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:42,278 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:42,279 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:50,341 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:50,341 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,354 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,355 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,665 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,665 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,986 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:51,986 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:56,204 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:56,204 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:57,016 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:57,016 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:57,356 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:37:57,356 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:11,867 - INFO - Execution started.
+2025-05-09 15:47:11,868 - INFO - Launching GUI.
+2025-05-09 15:47:11,868 - INFO - this log is from the main thread
+2025-05-09 15:47:11,868 - INFO - Waiting for main thread: activation number: 0
+2025-05-09 15:47:11,868 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
+2025-05-09 15:47:11,868 - INFO - Waiting for main thread activation...
+2025-05-09 15:47:12,609 - INFO - Fetching site list from GraphQL API (IAM auth).
+2025-05-09 15:47:12,814 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:47:17,154 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:17,154 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:17,154 - INFO - Main thread stopped by user.
+2025-05-09 15:47:17,154 - INFO - Main thread ended.
+2025-05-09 15:47:17,175 - INFO - Execution completed.
+2025-05-09 15:47:20,484 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:20,484 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:25,267 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:25,267 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:25,635 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:25,636 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:39,500 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:39,500 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:39,857 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:47:39,857 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:48:03,266 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:48:03,266 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:48:06,046 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:48:06,047 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:53:09,313 - INFO - Execution started.
+2025-05-09 15:53:09,315 - INFO - Launching GUI.
+2025-05-09 15:53:09,315 - INFO - this log is from the main thread
+2025-05-09 15:53:09,315 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
+2025-05-09 15:53:09,315 - INFO - Waiting for main thread: activation number: 0
+2025-05-09 15:53:09,315 - INFO - Waiting for main thread activation...
+2025-05-09 15:53:09,487 - INFO - Fetching site list from GraphQL API (IAM auth).
+2025-05-09 15:53:09,654 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:53:17,163 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:53:17,163 - INFO - Main thread stopped by user.
+2025-05-09 15:53:17,163 - INFO - Main thread ended.
+2025-05-09 15:53:17,187 - INFO - Execution completed.
+2025-05-09 15:53:23,146 - INFO - Execution started.
+2025-05-09 15:53:23,147 - INFO - Launching GUI.
+2025-05-09 15:53:23,148 - INFO - Image file exists at: C:\Users\Orlevi\Documents\ArcGIS\Projects\ArcGis-UI-POC\exodigo-logo-32x32.png
+2025-05-09 15:53:23,148 - INFO - this log is from the main thread
+2025-05-09 15:53:23,148 - INFO - Waiting for main thread: activation number: 0
+2025-05-09 15:53:23,148 - INFO - Waiting for main thread activation...
+2025-05-09 15:53:23,287 - INFO - Fetching site list from GraphQL API (IAM auth).
+2025-05-09 15:53:23,422 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:53:56,536 - INFO - Downloading file from s3://exodigo-sites-user-layers/download/Massachusetts_NG_Revere_Revere_7_Substation_Upgrades/Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson.zip
+2025-05-09 15:53:56,543 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:54:47,399 - INFO - File downloaded successfully: Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson.zip
+2025-05-09 15:54:51,145 - INFO - Unzipped Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson.zip to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson
+2025-05-09 15:54:51,145 - INFO - Using template FileGDB: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb
+2025-05-09 15:54:51,145 - INFO - Processing folder: C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson to get json files
+2025-05-09 15:54:58,788 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis-depth__EPSG_6491__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis_depth__EPSG_6491__Point_arcgis (POINT)
+2025-05-09 15:54:58,788 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis_depth__EPSG_6491__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:01,024 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\exodigo_ai_products_intermediate_products_intermediate_products\analysis__EPSG_6491__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__LineString_arcgis (POLYLINE)
+2025-05-09 15:55:01,024 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:02,662 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\exodigo_analyzed_products\analysis-depth__EPSG_6491__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis_depth__EPSG_6491__Point_arcgis (POINT)
+2025-05-09 15:55:02,663 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis_depth__EPSG_6491__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:03,923 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6491__LineString.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__LineString_arcgis (POLYLINE)
+2025-05-09 15:55:03,924 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__LineString_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:04,745 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\exodigo_analyzed_products\analysis__EPSG_6491__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__Polygon_arcgis (POLYGON)
+2025-05-09 15:55:04,746 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\analysis__EPSG_6491__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:05,628 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\planned_polygons\planned_polygons__EPSG_None__Polygon.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis (POLYGON)
+2025-05-09 15:55:05,629 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\planned_polygons__EPSG_None__Polygon_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:06,546 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\pois\pois__EPSG_6491__Point.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\pois__EPSG_6491__Point_arcgis (POINT)
+2025-05-09 15:55:06,546 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\pois__EPSG_6491__Point_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:07,550 - INFO - Converted C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson\transmitters\main__EPSG_6491__MultiPoint.arcgis.geojson to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\main__EPSG_6491__MultiPoint_arcgis (MULTIPOINT)
+2025-05-09 15:55:07,551 - INFO - Added C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\template_v1_5.gdb\main__EPSG_6491__MultiPoint_arcgis to C:/temp_arcgis_geojson\geojson_outputs.txt
+2025-05-09 15:55:09,338 - INFO - Flag was set to true
+2025-05-09 15:55:09,338 - INFO - Run the map placement on the main thread!!!!!!!!!!!.
+2025-05-09 15:55:09,339 - INFO - has map object
+2025-05-09 15:55:12,544 - INFO - Ran add_features_to_map from main thread.
+2025-05-09 15:55:12,544 - INFO - Waiting for main thread: activation number: 1
+2025-05-09 15:55:12,544 - INFO - Waiting for main thread activation...
+2025-05-09 15:55:31,922 - INFO - Exporting template features to GeoJSON...
+2025-05-09 15:55:31,971 - INFO - Upload for inspection button clicked.
+2025-05-09 15:55:32,471 - INFO - Exported Lines to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Lines_FeaturesToJSON.geojson
+2025-05-09 15:55:32,580 - INFO - Exported OH_Poles to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\OH_Poles_FeaturesToJSON.geojson
+2025-05-09 15:55:32,685 - INFO - Exported OH_Lines to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\OH_Lines_FeaturesToJSON.geojson
+2025-05-09 15:55:32,779 - INFO - Exported QC_Polygons to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\QC_Polygons_FeaturesToJSON.geojson
+2025-05-09 15:55:32,874 - INFO - Exported Excavation to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Excavation_FeaturesToJSON.geojson
+2025-05-09 15:55:32,966 - INFO - Exported Scanned_area to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Scanned_area_FeaturesToJSON.geojson
+2025-05-09 15:55:33,055 - INFO - Exported Unscanned_area to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Unscanned_area_FeaturesToJSON.geojson
+2025-05-09 15:55:33,164 - INFO - Exported Site_Classification to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Site_Classification_FeaturesToJSON.geojson
+2025-05-09 15:55:33,421 - INFO - Exported Manholes to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Manholes_FeaturesToJSON.geojson
+2025-05-09 15:55:33,698 - INFO - Exported Elements to C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Elements_FeaturesToJSON.geojson
+2025-05-09 15:55:33,699 - INFO - Uploading files to S3...
+2025-05-09 15:55:33,700 - INFO - Uploading GeoJSON files from C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site
+2025-05-09 15:55:33,881 - INFO - Found 11 GeoJSON files to upload.
+2025-05-09 15:55:33,893 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:55:35,506 - INFO - Ran export_features_to_geojson from main thread.
+2025-05-09 15:55:35,506 - INFO - Waiting for main thread: activation number: 2
+2025-05-09 15:55:35,506 - INFO - Waiting for main thread activation...
+2025-05-09 15:55:36,168 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Elements_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Elements_FeaturesToJSON.geojson
+2025-05-09 15:55:36,493 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Excavation_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Excavation_FeaturesToJSON.geojson
+2025-05-09 15:55:36,820 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Lines_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Lines_FeaturesToJSON.geojson
+2025-05-09 15:55:37,136 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Manholes_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Manholes_FeaturesToJSON.geojson
+2025-05-09 15:55:38,095 - ERROR - Failed to upload C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Massachusetts_NG_Revere_Revere_7_Substation_Upgrades.site_export.geojson: Need to rewind the stream <botocore.httpchecksum.AwsChunkedWrapper object at 0x00000233F3E98750>, but stream is not seekable.
+2025-05-09 15:55:39,000 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\OH_Lines_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/OH_Lines_FeaturesToJSON.geojson
+2025-05-09 15:55:39,318 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\OH_Poles_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/OH_Poles_FeaturesToJSON.geojson
+2025-05-09 15:55:39,636 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\QC_Polygons_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/QC_Polygons_FeaturesToJSON.geojson
+2025-05-09 15:55:39,950 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Scanned_area_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Scanned_area_FeaturesToJSON.geojson
+2025-05-09 15:55:40,288 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Site_Classification_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Site_Classification_FeaturesToJSON.geojson
+2025-05-09 15:55:40,669 - INFO - Uploaded C:\Users\Orlevi\Documents\ArcGIS\Projects\MyProject-RAW TEST\Unscanned_area_FeaturesToJSON.geojson to s3://exodigo-sites-user-layers/arcgis_sync/layers/test_site/Unscanned_area_FeaturesToJSON.geojson
+2025-05-09 15:55:40,833 - INFO - Loading cached SSO token for exodigo-prodb-sso
+2025-05-09 15:55:43,027 - INFO - Lambda response: {'statusCode': 200, 'message': 'Calculation invoked successfully', 'event_id': 'calculate_algo_clashes:a87759a5-9eb5-4af1-8440-b36e14389b13:calculate:972d32aeafe2', 's3_ref': 's3://exodigo-temporary/clashes-calculation-results/test_site/clashes/clashes.2025_05_07__14_13_33.json', 'presigned_expire_at': None, 's3_presigned_url': None, '_event': "{'site': 'test_site'}"}
+2025-05-09 15:55:54,089 - INFO - GUI closed by user. Stopping all threads.
+2025-05-09 15:55:54,089 - INFO - Main thread stopped by user.
+2025-05-09 15:55:54,089 - INFO - Main thread ended.
+2025-05-09 15:55:54,142 - INFO - Execution completed.
