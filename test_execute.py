@@ -5,6 +5,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import os
 import threading
+import time
 import boto3
 from botocore.exceptions import BotoCoreError, TokenRetrievalError
 import subprocess
@@ -37,7 +38,41 @@ BUCKET_NAME_USER_LAYERS = os.environ.get("BUCKET_NAME_USER_LAYERS", "exodigo-sit
 # Configure logging to log messages to a file
 
 site_dict = {}  # {site_name: s3_ref}
+def show_progress_bar(root, duration=5.0):
+    """
+    Show and animate a horizontal progress bar at the bottom center of the root window.
+    duration: total time in seconds for the bar to fill (fake/animated).
+    """
+    # Attach progress_bar to root so it persists between calls
+    if not hasattr(root, "progress_bar"):
+        root.progress_bar = ctk.CTkProgressBar(
+            root,
+            orientation="horizontal",
+            width=300,
+            height=30,
+            corner_radius=20,
+            border_width=2,
+            border_color="#00b4d8",      # turquoise border
+            progress_color="#ff69b4",    # pink progress
+            fg_color="#22223b"           # dark background
+        )
+    progress_bar = root.progress_bar
+    progress_bar.set(0)
+    # Center horizontally, 30px margin from bottom (form is 500x500)
+    x = (500 - 300) // 2
+    y = 500 - 50 - 30
+    progress_bar.place(x=x, y=y)
+    progress_bar.update()
 
+    def animate():
+        steps = 100
+        for i in range(steps + 1):
+            progress = i / steps
+            root.after(0, lambda p=progress: progress_bar.set(p))
+            time.sleep(duration / steps)
+        root.after(0, progress_bar.place_forget)
+
+    threading.Thread(target=animate, daemon=True).start()
 def launch_gui():
         """Launch the main GUI application."""
     #==============================================================================================#
@@ -321,7 +356,7 @@ def launch_gui():
             upload_files_flag.set()
             set_buttons_state(download_state="disabled", upload_state="disabled")
             logging.info("Upload for inspection button clicked.")
-
+     
     #==============================================================================================#
     #Main GUI code
     #==============================================================================================#    
@@ -339,7 +374,7 @@ def launch_gui():
         # Create the main application window
         root = ctk.CTk()
         root.title("Exodigo ArcGis Integrator")
-        root.geometry("400x300")
+        root.geometry("500x500")
         root.resizable(False, False)
         # Set custom window icon
         icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
@@ -399,8 +434,15 @@ def launch_gui():
             hover_color="#06d6a0",
             command=lambda: upload_for_inspection()
         )
-
-        # Configure the login button to call the on_login function
+        show_progress = ctk.CTkButton(
+            root,
+            text="Show Progress",
+            corner_radius=6,
+            fg_color="#219ebc",
+            hover_color="#06d6a0",
+        )
+        show_progress.place(x=150, y=100)  # Align with the left side of the combobox and place below it
+        show_progress.configure(command=lambda: show_progress_bar(root, duration=3.0))        # Configure the login button to call the on_login function
         login_button.configure(command=on_login)
 
         #filter to update the dropdown when the filter changes

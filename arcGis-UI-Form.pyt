@@ -60,7 +60,42 @@ class Tool:
     def set_buttons_state(self, download_state="normal", upload_state="normal"):
         self.download_button.configure(state=download_state)
         self.upload_button.configure(state=upload_state)
+    def show_progress_bar(self, root, duration=3.0):
+        """
+        Show and animate a mock horizontal progress bar at the bottom center of the 500x500 root window.
+        duration: total time in seconds for the bar to fill (fake/animated).
+        """
+        # Create the progress bar if it doesn't exist yet
+        if not hasattr(self, "progress_bar"):
+            self.progress_bar = ctk.CTkProgressBar(
+                root,
+                orientation="horizontal",
+                width=300,
+                height=50,
+                corner_radius=20,
+                border_width=2,
+                border_color="#00b4d8",      # turquoise border
+                progress_color="#1f6aa5",    # pink progress
+                fg_color="#22223b"           # dark background
+            )
+        self.progress_bar.set(0)
+        # Center horizontally, 30px margin from bottom (form is 500x500)
+        x = (500 - 300) // 2
+        y = 500 - 50 - 30
+        self.progress_bar.place(x=x, y=y)
+        self.progress_bar.update()
 
+        def animate():
+            steps = 100
+            for i in range(steps + 1):
+                if self.stop_threads:
+                    break
+                progress = i / steps
+                root.after(0, lambda p=progress: self.progress_bar.set(p))
+                time.sleep(duration / steps)
+            root.after(0, self.progress_bar.place_forget)
+
+        threading.Thread(target=animate, daemon=True).start()
 
     def getParameterInfo(self):
         # Define the input parameters for the tool
@@ -236,7 +271,7 @@ class Tool:
         except Exception as e:
             logging.error(f"Failed to re-enable buttons: {e}")
 
-        
+   
     def launch_gui(self):
         """Launch the main GUI application."""
     #==============================================================================================#
@@ -367,9 +402,9 @@ class Tool:
                 if filtered:
                     combo_var.set(filtered[0])
                     combo.configure(values=filtered)
-                    self.download_button.place(x=10, y=160)
-                    self.download_button.pack(side="left", padx=10, pady=0)  # Show download button
-                    self.upload_button.place(x=10, y=200)  # Align with the left side of the combobox and place below it
+                    self.download_button.place(x=20, y=160)
+                    self.download_button.pack(side="left", padx=20, pady=0)  # Show download button
+                    self.upload_button.place(x=20, y=200)  # Align with the left side of the combobox and place below it
                     set_buttons_state(download_state="normal", upload_state="normal")
                     # logging.info(f"Filtered sites: {filtered}")
                     
@@ -400,6 +435,7 @@ class Tool:
             bucket_name = BUCKET_NAME_USER_LAYERS
             object_key = f"download/{s3_ref}/{s3_ref}.site_export.geojson.zip"
             local_filename = f"{s3_ref}.site_export.geojson.zip"
+            self.show_progress_bar(root, duration=65.0)  # Show progress bar for 25 seconds
             try:
                 session = boto3.Session(profile_name=AWS_PROFILE)
                 s3 = session.client("s3")
@@ -530,6 +566,7 @@ class Tool:
             upload_files_flag.set()
             set_buttons_state(download_state="disabled", upload_state="disabled")
             logging.info("Upload for inspection button clicked.")
+            self.show_progress_bar(root, duration=15.0)
             
     #==============================================================================================#
     #Main GUI code
@@ -548,7 +585,7 @@ class Tool:
         # Create the main application window
         root = ctk.CTk()
         root.title("Exodigo ArcGis Integrator")
-        root.geometry("400x300")
+        root.geometry("500x500")
         root.resizable(False, False)
         # Set custom window icon
         icon_path = os.path.join(script_dir, "exodigo-logo-32x32.ico")
@@ -560,17 +597,17 @@ class Tool:
         
         # Add a label for the filter entry
         filter_label = ctk.CTkLabel(root, text="Type here to filter site names", font=ctk.CTkFont(size=12, weight="normal"))
-        filter_label.place(x=10, y=50)  # Set the x and y coordinates for the label
+        filter_label.place(x=20, y=50)  # Set the x and y coordinates for the label
 
         # Add a filter entry above the ComboBox
         filter_var = ctk.StringVar()
         filter_entry = ctk.CTkEntry(root, textvariable=filter_var, width=300)
-        filter_entry.place(x=10, y=80)  # Align the filter entry with the label
+        filter_entry.place(x=20, y=80)  # Align the filter entry with the label
 
         # Create a dropdown menu with a default "Loading..." value
         combo_var = ctk.StringVar(value="Loading...")
         combo = ctk.CTkComboBox(root, variable=combo_var, values=["Loading..."], width=300)
-        combo.place(x=10, y=120)  # Align the dropdown menu with the label and filter entry
+        combo.place(x=20, y=120)  # Align the dropdown menu with the label and filter entry
 
 
         # Load the image (make sure the path is correct and file exists)
@@ -583,7 +620,7 @@ class Tool:
             image=image,
             compound="left",  # Image to the left of the text; use "top", "right", "bottom" as needed
             corner_radius=20,
-            fg_color="#1f6aa5",
+            fg_color="#219ebc",
             hover_color="#144870"
         )
         
@@ -597,7 +634,6 @@ class Tool:
             hover_color="#06d6a0",
             command=lambda: on_site_selected()
         )
-        # download_button.place(x=10, y=160)  # Align with the left side of the combobox and place below it
 
         #create an "upload for inspection" button
         self.upload_button = ctk.CTkButton(
